@@ -29,8 +29,7 @@ public class Taller05Application implements CommandLineRunner {
 	private EspacioFisicoRepository espacioRepo;
 	@Autowired
 	private FranjaHorariaRepository franjaRepo;
-	@Autowired
-	private OficinaRepository oficinaRepo;
+	// ==========================
 
 	public static void main(String[] args) {
 		SpringApplication.run(Taller05Application.class, args);
@@ -231,7 +230,7 @@ public class Taller05Application implements CommandLineRunner {
 	 */
 	@Transactional
 	public void eliminarCurso(int cursoId) {
-		Optional<Curso> opt = cursoRepo.findById(cursoId);
+		Optional<Curso> opt = cursoRepo.findWithFranjasById(cursoId);
 		if (opt.isPresent()) {
 			cursoRepo.delete(opt.get()); // cascada a franjas
 			System.out.println("== Curso eliminado (id=" + cursoId + ") y sus franjas asociadas ==");

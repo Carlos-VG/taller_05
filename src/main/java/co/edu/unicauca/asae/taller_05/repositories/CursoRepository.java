@@ -1,13 +1,15 @@
 package co.edu.unicauca.asae.taller_05.repositories;
 
-import co.edu.unicauca.asae.taller_05.domain.Curso;
+import java.util.List;
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
-import java.util.Optional;
+import co.edu.unicauca.asae.taller_05.domain.Curso;
+import lombok.NonNull;
 
 /**
  * @brief Repositorio de Curso.
@@ -44,9 +46,10 @@ public interface CursoRepository extends JpaRepository<Curso, Integer> {
     List<Curso> findCursosYFranjasByDocente(@Param("docenteId") int docenteId);
 
     /**
-     * @brief Alternativa usando EntityGraph.
-     * @details Carga franjas+espacios en un solo viaje.
+     * @brief Carga un curso con sus franjas y espacios en un solo fetch.
+     * @details Simula EAGER puntual (curso→franjas→espacioFisico).
      */
     @EntityGraph(attributePaths = { "franjas", "franjas.espacioFisico" })
-    Optional<Curso> findById(Integer id);
+    @NonNull
+    Optional<Curso> findWithFranjasById(@NonNull Integer id);
 }
