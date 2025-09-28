@@ -62,7 +62,7 @@ public class Taller05Application implements CommandLineRunner {
 		// LocalTime.of(18, 0));
 
 		// // 4) Consultar franjas de un curso
-		// consultarFranjasDeUnCurso(cursoId);
+		// consultarFranjasDeUnCurso(1);
 
 		// // 5) Consultar franjas por docente
 		// consultarFranjasPorDocente(2);
@@ -177,6 +177,9 @@ public class Taller05Application implements CommandLineRunner {
 			// curso y espacio están cargados (EAGER puntual por EntityGraph)
 			System.out.println("Curso: " + f.getCurso().getNombre());
 			System.out.println("Espacio: " + f.getEspacioFisico().getNombre());
+			for (Docente d : f.getCurso().getDocentes()) {
+				System.out.println("Docente: " + d.getNombre() + " " + d.getApellido());
+			}
 			System.out.println("---- ---- ----");
 		}
 
@@ -203,19 +206,23 @@ public class Taller05Application implements CommandLineRunner {
 	 */
 	@Transactional(readOnly = true)
 	public void consultarFranjasPorDocente(int docenteId) {
+		// (Opcional) Mostrar quién es el docente consultado
+		docenteRepo.findById(docenteId).ifPresentOrElse(
+				d -> System.out.println("== Franjas del Docente: " + d.getNombre() + " " + d.getApellido()
+						+ " (id=" + docenteId + ") =="),
+				() -> System.out.println("== Franjas del Docente (id=" + docenteId + ") =="));
+
 		List<FranjaHoraria> franjas = franjaRepo.findByDocenteIdFetchCurso(docenteId);
 
-		System.out.println("== Franjas del Docente (id=" + docenteId + ") ==");
 		for (FranjaHoraria f : franjas) {
 			System.out.println("Franja #" + f.getId() + ": " + f.getDia() +
 					" " + f.getHoraInicio() + "-" + f.getHoraFin());
+
 			// Curso viene en fetch (EAGER puntual)
 			System.out.println("Curso: " + f.getCurso().getNombre());
 
-			// Espacio queda LAZY. Si NO accede al getter, no se dispara carga adicional.
-			// Descomentar la siguiente línea SOLO si se quiere forzar la carga (perderá el
-			// efecto LAZY):
-			// System.out.println("Espacio (forzado): " + f.getEspacioFisico().getNombre());
+			// Espacio queda LAZY: al acceder al getter se dispara la carga bajo demanda.
+			System.out.println("Espacio: " + f.getEspacioFisico().getNombre());
 
 			System.out.println("---- ---- ----");
 		}

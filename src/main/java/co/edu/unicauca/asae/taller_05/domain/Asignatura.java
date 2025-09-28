@@ -26,6 +26,7 @@ public class Asignatura {
     private String nombre;
 
     /** @brief Código de la asignatura. (VARCHAR(50), NOT NULL). */
-    @Column(name = "codigo", nullable = false, length = 50)
+    @Column(name = "codigo", nullable = false, length = 50, unique = true)
     private String codigo;
+
 }

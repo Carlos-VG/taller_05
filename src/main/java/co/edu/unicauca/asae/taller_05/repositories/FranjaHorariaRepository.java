@@ -17,7 +17,7 @@ public interface FranjaHorariaRepository extends JpaRepository<FranjaHoraria, In
     /**
      * @brief Franjas de un curso con curso+espacio en fetch (EAGER puntual).
      */
-    @EntityGraph(attributePaths = { "curso", "espacioFisico" })
+    @EntityGraph(attributePaths = { "curso", "curso.docentes", "espacioFisico" })
     List<FranjaHoraria> findByCurso_Id(int cursoId);
 
     /**
