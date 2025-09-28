@@ -5,21 +5,26 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @brief Subclase de Persona para docentes.
- * @details Relación 1–1 opcional con Oficina. Se habilita cascade PERSIST para
- *          que
- *          al crear un Docente se pueda guardar su Oficina con un solo save.
- *          (Ver relaciones 1–1 y tipos de cascada en JPA/Hibernate).
+ * @brief Subtipo de Persona que representa un docente.
+ * @details Mantiene relación 1:1 opcional con Oficina con cascade=PERSIST para
+ *          permitir el caso "un solo save" al crear Docente + Oficina
+ *          (requisito del taller).
+ * @note Tabla: docente; PK=FK(id) → persona.id (herencia JOINED).
  */
 @Entity
 @Getter
 @Setter
 @Table(name = "docente")
-@PrimaryKeyJoinColumn(name = "docId")
+@PrimaryKeyJoinColumn(name = "id") // PK=FK hacia persona.id
 public class Docente extends Persona {
 
+    /**
+     * @brief Oficina asignada (opcional).
+     * @details Columna: docente.oficina_id; UNIQUE.
+     *          CascadeType.PERSIST permite persistir la oficina al guardar el
+     *          docente.
+     */
     @OneToOne(optional = true, cascade = CascadeType.PERSIST)
     @JoinColumn(name = "oficina_id", unique = true)
-    private Oficina docOficina;
-
+    private Oficina oficina;
 }

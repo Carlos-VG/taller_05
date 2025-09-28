@@ -6,32 +6,35 @@ import lombok.Setter;
 
 /**
  * @brief Entidad base de la jerarquía de personas.
- * @details Estrategia JOINED para mantener normalización y evitar nulos de
- *          subclases.
- *          El correo es único. (Ver herencia JPA y restricciones de columna).
- *          Referencia: herencia en JPA SINGLE_TABLE / JOINED / TABLE_PER_CLASS.
+ * @details Implementa herencia JOINED para normalización y para permitir
+ *          subclases como Docente y Administrativo. El correo es único.
+ * @note Tabla: persona; PK: id.
  */
 @Entity
 @Getter
 @Setter
-@Table(name = "persona", uniqueConstraints = @UniqueConstraint(columnNames = "perCorreo"))
+@Table(name = "persona", uniqueConstraints = @UniqueConstraint(columnNames = "correo"))
 @Inheritance(strategy = InheritanceType.JOINED)
 public abstract class Persona {
 
-    /** Identificador interno autoincremental. */
+    /** @brief Identificador autogenerado (PK). */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int perId;
+    @Column(name = "id")
+    private int id;
 
-    /** Nombres de la persona (obligatorio, máx. 60). */
-    @Column(nullable = false, length = 50)
-    private String perNombre;
+    /** @brief Nombres de la persona. (VARCHAR(50), NOT NULL). */
+    @Column(name = "nombre", nullable = false, length = 50)
+    private String nombre;
 
-    /** Apellidos de la persona (obligatorio, máx. 60). */
-    @Column(nullable = false, length = 50)
-    private String perApellido;
+    /** @brief Apellidos de la persona. (VARCHAR(50), NOT NULL). */
+    @Column(name = "apellido", nullable = false, length = 50)
+    private String apellido;
 
-    /** Correo institucional o personal único (obligatorio). */
-    @Column(nullable = false, unique = true, length = 50)
-    private String perCorreo;
+    /**
+     * @brief Correo único de la persona.
+     * @details Restricción de unicidad exigida por el taller.
+     */
+    @Column(name = "correo", nullable = false, unique = true, length = 50)
+    private String correo;
 }

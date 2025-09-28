@@ -5,28 +5,28 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @brief Oficina asociable a un Docente.
- * @details Nombre único para evitar duplicados; ubicación y extensión
- *          opcionales.
- *          (Ver @Column y detalles de tabla/columnas en JPA).
+ * @brief Entidad Oficina.
+ * @details Nombre único (requisito del taller). Ubicación con límite de 20
+ *          caracteres.
+ * @note Tabla: oficina; PK: id.
  */
 @Entity
 @Getter
 @Setter
-@Table(name = "oficina", uniqueConstraints = @UniqueConstraint(columnNames = "ofiNombre"))
+@Table(name = "oficina", uniqueConstraints = @UniqueConstraint(columnNames = "nombre"))
 public class Oficina {
 
-    /** Identificador interno autoincremental. */
+    /** @brief Identificador autogenerado (PK). */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int ofiId;
+    @Column(name = "id")
+    private int id;
 
-    /** Nombre único de la oficina (ej. "Oficina 3-201"). */
-    @Column(nullable = false, unique = true, length = 20)
-    private String ofiNombre;
+    /** @brief Nombre único de la oficina. (VARCHAR(20), UNIQUE, NOT NULL). */
+    @Column(name = "nombre", nullable = false, unique = true, length = 20)
+    private String nombre;
 
-    /** Ubicación física (ej. bloque/piso). */
-    @Column(nullable = false, length = 20)
-    private String ofiUbicacion;
-
+    /** @brief Ubicación física (p. ej., bloque/piso). (VARCHAR(20), NOT NULL). */
+    @Column(name = "ubicacion", nullable = false, length = 20)
+    private String ubicacion;
 }

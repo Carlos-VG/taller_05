@@ -5,25 +5,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @brief Entidad que representa una asignatura.
- * @details Se exige nombre único para evitar duplicados.
+ * @brief Entidad Asignatura.
+ * @details Contiene nombre (255) y código (50) según esquema.
+ * @note Tabla: asignatura; PK: id.
  */
 @Entity
 @Getter
 @Setter
-@Table(name = "asignatura", uniqueConstraints = @UniqueConstraint(columnNames = "asiNombre"))
+@Table(name = "asignatura")
 public class Asignatura {
 
-    /** Identificador interno autoincremental. */
+    /** @brief Identificador autogenerado (PK). */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int asiId;
+    @Column(name = "id")
+    private int id;
 
-    /** Nombre único de la asignatura (obligatorio). */
-    @Column(nullable = false, unique = true, length = 255)
-    private String asiNombre;
+    /** @brief Nombre de la asignatura. (VARCHAR(255), NOT NULL). */
+    @Column(name = "nombre", nullable = false, length = 255)
+    private String nombre;
 
-    @Column(nullable = false, unique = true, length = 50)
-    private String asiCodigo;
-
+    /** @brief Código de la asignatura. (VARCHAR(50), NOT NULL). */
+    @Column(name = "codigo", nullable = false, length = 50)
+    private String codigo;
 }

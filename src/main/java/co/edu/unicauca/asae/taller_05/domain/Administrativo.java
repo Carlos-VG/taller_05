@@ -5,17 +5,17 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @brief Subclase de Persona para administrativos.
- * @details La guía del taller solo requiere incluirla en la jerarquía; sin
- *          lógica adicional.
+ * @brief Subtipo de Persona que representa un administrativo.
+ * @note Tabla: administrativo; PK=FK(id) → persona.id (herencia JOINED).
  */
 @Entity
 @Getter
 @Setter
 @Table(name = "administrativo")
-@PrimaryKeyJoinColumn(name = "admId")
+@PrimaryKeyJoinColumn(name = "id")
 public class Administrativo extends Persona {
 
-    @Column(length = 255, nullable = false)
-    private String admRol;
+    /** @brief Rol o dependencia del administrativo. (VARCHAR(255), NOT NULL). */
+    @Column(name = "rol", nullable = false, length = 255)
+    private String rol;
 }

@@ -5,26 +5,27 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * @brief Entidad que representa un espacio físico (aula/laboratorio).
- * @details Nombre único. Capacidad y ubicación opcionales.
+ * @brief Entidad Espacio Físico (aula/lab).
+ * @details Nombre único (requisito del taller). Capacidad opcional (entero).
+ * @note Tabla: espacio_fisico; PK: id.
  */
 @Entity
 @Getter
 @Setter
-@Table(name = "espacio_fisico", uniqueConstraints = @UniqueConstraint(columnNames = "espNombre"))
+@Table(name = "espacio_fisico", uniqueConstraints = @UniqueConstraint(columnNames = "nombre"))
 public class EspacioFisico {
 
-    /** Identificador interno autoincremental. */
+    /** @brief Identificador autogenerado (PK). */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int espId;
+    @Column(name = "id")
+    private int id;
 
-    /** Nombre único del espacio (obligatorio). */
-    @Column(nullable = false, unique = true, length = 255)
-    private String espNombre;
+    /** @brief Nombre único del espacio. (VARCHAR(255), UNIQUE, NOT NULL). */
+    @Column(name = "nombre", nullable = false, unique = true, length = 255)
+    private String nombre;
 
-    /** Capacidad aproximada (opcional). */
-    @Column
-    private int espCapacidad;
-
+    /** @brief Capacidad del espacio (nullable según esquema). */
+    @Column(name = "capacidad")
+    private Integer capacidad;
 }

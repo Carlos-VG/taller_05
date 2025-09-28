@@ -1,7 +1,7 @@
 package co.edu.unicauca.asae.taller_05.domain;
 
 /**
- * @brief Enumeración de días académicos para franjas horarias.
+ * @brief Enumeración de días académicos para Franjas Horarias.
  */
 public enum DiaSemana {
     LUNES,
