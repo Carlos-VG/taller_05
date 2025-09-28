@@ -206,30 +206,32 @@ public class Taller05Application implements CommandLineRunner {
 	 */
 	@Transactional(readOnly = true)
 	public void consultarFranjasPorDocente(int docenteId) {
-		// (Opcional) Mostrar quién es el docente consultado
-		docenteRepo.findById(docenteId).ifPresentOrElse(
-				d -> System.out.println("== Franjas del Docente: " + d.getNombre() + " " + d.getApellido()
-						+ " (id=" + docenteId + ") =="),
-				() -> System.out.println("== Franjas del Docente (id=" + docenteId + ") =="));
+		Optional<Docente> docenteOpt = docenteRepo.findById(docenteId);
+		String etiquetaDocente = docenteOpt
+				.map(d -> d.getNombre() + " " + d.getApellido())
+				.orElse("Docente id=" + docenteId);
 
 		List<FranjaHoraria> franjas = franjaRepo.findByDocenteIdFetchCurso(docenteId);
+		System.out.println("== Franjas del docente con id: " + docenteId + " ==");
 
 		for (FranjaHoraria f : franjas) {
-			System.out.println("Franja #" + f.getId() + ": " + f.getDia() +
-					" " + f.getHoraInicio() + "-" + f.getHoraFin());
+			System.out.println("Franja #" + f.getId() + ": " + f.getDia()
+					+ " " + f.getHoraInicio() + "-" + f.getHoraFin());
 
-			// Curso viene en fetch (EAGER puntual)
+			// Datos del docente (por cada franja, como exige la guía)
+			System.out.println("Docente: " + etiquetaDocente);
+
+			// Curso viene en fetch (eager puntual)
 			System.out.println("Curso: " + f.getCurso().getNombre());
 
-			// Espacio queda LAZY: al acceder al getter se dispara la carga bajo demanda.
+			// Espacio LAZY: aquí sí se dispara la carga, como pide la guía
 			System.out.println("Espacio: " + f.getEspacioFisico().getNombre());
-
 			System.out.println("---- ---- ----");
 		}
 	}
 
 	// ===========================================
-	// 6) ELIMINAR CURSO (cascada REMOVE a franjas)
+	// 6) ELIMINAR CURSO (cascade REMOVE a franjas)
 	// ===========================================
 	/**
 	 * @brief Elimina un curso por id. Las franjas se eliminan por cascada (REMOVE +
@@ -238,11 +240,28 @@ public class Taller05Application implements CommandLineRunner {
 	@Transactional
 	public void eliminarCurso(int cursoId) {
 		Optional<Curso> opt = cursoRepo.findWithFranjasById(cursoId);
-		if (opt.isPresent()) {
-			cursoRepo.delete(opt.get()); // cascada a franjas
-			System.out.println("== Curso eliminado (id=" + cursoId + ") y sus franjas asociadas ==");
-		} else {
+		if (opt.isEmpty()) {
 			System.out.println("No existe curso con id " + cursoId);
+			return;
 		}
+
+		Curso c = opt.get();
+		System.out.println("== Se eliminará el curso (id=" + cursoId + "): " + c.getNombre() + " ==");
+
+		List<FranjaHoraria> franjas = c.getFranjas();
+		if (franjas.isEmpty()) {
+			System.out.println("No tiene franjas asociadas.");
+		} else {
+			System.out.println("Franjas a eliminar (" + franjas.size() + "):");
+			for (FranjaHoraria f : franjas) {
+				System.out.println("  - Franja #" + f.getId() + " | "
+						+ f.getDia() + " " + f.getHoraInicio() + "-" + f.getHoraFin()
+						+ " | Espacio: " + f.getEspacioFisico().getNombre());
+			}
+		}
+
+		cursoRepo.delete(c); // cascada REMOVE + orphanRemoval sobre las franjas
+		System.out.println("== Curso y franjas eliminados ==");
 	}
+
 }
