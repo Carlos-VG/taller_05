@@ -39,28 +39,38 @@ public class Taller05Application implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 
-		// 1) Crear Docente + Oficina con un solo save
-		// crearDocenteConOficinaUnSoloSave("Ana", "Rojas", "ana.rojas@unicauca.edu.co",
-		// "Of-201", "Bloque A, Piso 2");
+		// // 1) Crear Docente + Oficina con un solo save (correo y oficina distintos)
+		// crearDocenteConOficinaUnSoloSave(
+		// "María", "Lozano", "maria.lozano@unicauca.edu.co",
+		// "Of-402", "Bloque C, Piso 4");
 
-		// 2) Crear Curso con Asignatura y Docentes existentes (usar getReferenceById)
-		// int asignaturaId = 1; List<Integer> docentesIds = List.of(1, 2);
-		// crearCursoConAsignaturaYDocentes("Arquitectura Empresarial - Grupo A",
-		// asignaturaId, docentesIds);
+		// // 2) Crear Curso con Asignatura y Docentes existentes
+		// int asignaturaId = 2; // "Bases de Datos II" ya existe en import.sql
+		// List<Integer> docentesIds = List.of(1, 2); // docentes existentes (IDs 1 y 2)
+		// crearCursoConAsignaturaYDocentes(
+		// "Bases de Datos II - Grupo C",
+		// asignaturaId,
+		// docentesIds);
 
-		// 3) Crear Franja para Curso y Espacio existentes (usar getReferenceById)
-		// int cursoId = 1, espacioId = 1;
-		// crearFranjaParaCursoYEspacio(cursoId, espacioId, DiaSemana.LUNES,
-		// LocalTime.of(8,0), LocalTime.of(10,0));
+		// // 3) Crear Franja para Curso y Espacio existentes (horario distinto)
+		// int cursoId = 2; // curso existente: "Bases de Datos II - Grupo B"
+		// int espacioId = 2; // "Laboratorio Redes 2"
+		// crearFranjaParaCursoYEspacio(
+		// cursoId,
+		// espacioId,
+		// DiaSemana.MARTES,
+		// LocalTime.of(16, 0),
+		// LocalTime.of(18, 0));
 
-		// 4) Consultar franjas de un curso (franja + curso + espacio EAGER puntual)
+		// // 4) Consultar franjas de un curso
 		// consultarFranjasDeUnCurso(cursoId);
 
-		// 5) Consultar franjas por docente (curso EAGER, espacio LAZY)
-		// consultarFranjasPorDocente(1);
+		// // 5) Consultar franjas por docente
+		// consultarFranjasPorDocente(2);
 
-		// 6) Eliminar curso (cascada REMOVE sobre franjas)
-		// eliminarCurso(1);
+		// // 6) Eliminar curso
+		// eliminarCurso(2);
+
 	}
 
 	// ===========================
@@ -141,7 +151,7 @@ public class Taller05Application implements CommandLineRunner {
 		FranjaHoraria guardada = franjaRepo.save(f);
 		System.out.println("== Franja creada ==");
 		System.out.println("Id: " + guardada.getId() + " - " + guardada.getDia() +
-				" " + guardada.getHoraInicio() + "–" + guardada.getHoraFin());
+				" " + guardada.getHoraInicio() + "-" + guardada.getHoraFin());
 		System.out.println("CursoId: " + cursoId + ", EspacioId: " + espacioId);
 		System.out.println("---- ---- ----");
 		return guardada;
@@ -164,7 +174,7 @@ public class Taller05Application implements CommandLineRunner {
 		System.out.println("== Franjas del Curso (id=" + cursoId + ") ==");
 		for (FranjaHoraria f : franjas) {
 			System.out.println("Franja #" + f.getId() + ": " + f.getDia() +
-					" " + f.getHoraInicio() + "–" + f.getHoraFin());
+					" " + f.getHoraInicio() + "-" + f.getHoraFin());
 			// curso y espacio están cargados (EAGER puntual por EntityGraph)
 			System.out.println("Curso: " + f.getCurso().getNombre());
 			System.out.println("Espacio: " + f.getEspacioFisico().getNombre());
@@ -199,7 +209,7 @@ public class Taller05Application implements CommandLineRunner {
 		System.out.println("== Franjas del Docente (id=" + docenteId + ") ==");
 		for (FranjaHoraria f : franjas) {
 			System.out.println("Franja #" + f.getId() + ": " + f.getDia() +
-					" " + f.getHoraInicio() + "–" + f.getHoraFin());
+					" " + f.getHoraInicio() + "-" + f.getHoraFin());
 			// Curso viene en fetch (EAGER puntual)
 			System.out.println("Curso: " + f.getCurso().getNombre());
 

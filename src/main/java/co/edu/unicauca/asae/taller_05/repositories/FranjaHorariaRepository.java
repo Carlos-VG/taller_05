@@ -24,12 +24,13 @@ public interface FranjaHorariaRepository extends JpaRepository<FranjaHoraria, In
      * @brief Franjas de un docente, con curso en fetch y espacio LAZY.
      */
     @Query("""
-                select f
+                select distinct f
                 from FranjaHoraria f
-                join f.curso c
-                join c.docentes d
-                left join fetch c.asignatura a
+                join f.curso c2
+                join c2.docentes d
+                left join fetch f.curso c
                 where d.id = :docenteId
             """)
     List<FranjaHoraria> findByDocenteIdFetchCurso(@Param("docenteId") int docenteId);
+
 }
